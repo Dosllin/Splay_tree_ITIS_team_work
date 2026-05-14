@@ -8,6 +8,7 @@ class Node:
 class SplayTree:
     def __init__(self):
         self.root = None # Корень дерева
+        self.iterations = 0 # Счётчики операций
 
     def insert(self, value):
         new_node = Node(value)
@@ -39,7 +40,10 @@ class SplayTree:
 
     def _splay(self, node):
         current = node
+
         while current.parent is not None:
+            self.iterations += 1
+
             parent = current.parent
             grandpa = current.parent.parent
             if grandpa is None: #ZIG (один поворот)
@@ -63,6 +67,8 @@ class SplayTree:
         self.root = node
 
     def _right_rotate(self,node):
+        self.iterations += 1
+
         parent = node.parent
         current = node
         if parent is None: return
@@ -86,6 +92,8 @@ class SplayTree:
 
 
     def _left_rotate(self, node):
+        self.iterations += 1
+
         parent = node.parent
         current = node
         if parent is None: return
@@ -111,6 +119,7 @@ class SplayTree:
         current = self.root
 
         while current is not None:
+            self.iterations += 1
             if value < current.value:
                 current = current.left
             elif value > current.value:
@@ -149,6 +158,7 @@ class SplayTree:
         # Ищем максимальный элемент слева
         current = left_subtree
         while current.right is not None:
+            self.iterations += 1
             current = current.right
 
         # Поднимаем максимум в корень
@@ -161,6 +171,11 @@ class SplayTree:
             right_subtree.parent = self.root
 
         return True
+    def reset_iterations(self):
+        self.iterations = 0
+
+    def get_iterations(self):
+        return self.iterations
 
     def print_tree(self, node=None, level=0, prefix='Root: '):
         if node is None and level == 0:
